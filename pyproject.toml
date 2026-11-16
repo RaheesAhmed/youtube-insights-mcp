@@ -1,0 +1,40 @@
+[project]
+name = "youtube-insights-mcp"
+version = "1.0.0"
+description = "Remote MCP server for YouTube channel research and owner analytics (Data API v3 + Analytics API v2)."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=4.2,<5",
+    "httpx[http2]>=0.28",
+    "python-dotenv>=1.0",
+    "uvicorn>=0.30",
+]
+
+[project.scripts]
+youtube-insights-mcp = "youtube_insights_mcp.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.5.0",
+    "respx>=0.23.1",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "ASYNC"]
+ignore = ["S101", "S311"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
