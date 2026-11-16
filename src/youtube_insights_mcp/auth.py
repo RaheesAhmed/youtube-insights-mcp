@@ -57,6 +57,7 @@ def build_auth(settings: config_lib.Settings) -> AuthProvider | None:
     if settings.auth_mode is config_lib.AuthMode.TOKEN:
         return BearerTokenVerifier(settings.bearer_tokens)
     base_url = settings.public_base_url or f"http://{settings.host}:{settings.port}"
+    
     return GoogleProvider(
         client_id=settings.google_client_id,
         client_secret=settings.google_client_secret,
@@ -64,6 +65,7 @@ def build_auth(settings: config_lib.Settings) -> AuthProvider | None:
         required_scopes=settings.oauth_scopes,
         jwt_signing_key=settings.jwt_signing_key,
         redirect_path="/auth/callback",
+        extra_authorize_params={"access_type": "offline", "prompt": "select_account consent"},
     )
 
 

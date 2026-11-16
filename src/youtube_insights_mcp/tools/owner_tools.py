@@ -16,7 +16,7 @@ from youtube_insights_mcp.tools import context as context_lib
 
 READ_ONLY = {"readOnlyHint": True, "openWorldHint": True, "idempotentHint": True}
 _SAFE_PARAM_RE = re.compile(r"^[\w,;=:.\-]*$")
-_CONTENT_TYPE_FILTER = {"shorts": "SHORTS", "long": "VIDEO_ON_DEMAND", "live": "LIVE_STREAM"}
+_CONTENT_TYPE_FILTER = {"shorts": "shorts", "long": "videoOnDemand", "live": "liveStream"}
 _VIDEO_METRICS = (
     "views,engagedViews,estimatedMinutesWatched,averageViewDuration,averageViewPercentage,"
     "likes,comments,shares,subscribersGained,subscribersLost"

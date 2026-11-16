@@ -89,27 +89,33 @@ def save_token(path: pathlib.Path, data: dict[str, Any]) -> None:
     tmp.replace(path)
 
 
-def build_login_url(settings: config_lib.Settings) -> tuple[str, str, str]:
-    """Returns (url, state, code_verifier) for a PKCE authorization-code login."""
+def build_login_url(settings: config_lib.Settings, login_hint: str | None = None) -> tuple[str, str, str]:
+    """Returns (url, state, code_verifier) for a PKCE authorization-code login.
+
+    Args:
+      settings: Server settings (client id, scopes).
+      login_hint: Optional email of the channel owner, pre-selected in Google's chooser.
+    """
     verifier = secrets.token_urlsafe(64)
     challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
     state = secrets.token_urlsafe(24)
-    query = urllib.parse.urlencode(
-        {
-            "client_id": settings.google_client_id,
-            "redirect_uri": LOGIN_REDIRECT_URI,
-            "response_type": "code",
-            "scope": " ".join(settings.oauth_scopes),
-            "access_type": "offline",
-            "prompt": "consent",
-            "include_granted_scopes": "true",
-            "state": state,
-            "code_challenge": challenge,
-            "code_challenge_method": "S256",
-        }
-    )
-    return f"{AUTH_URL}?{query}", state, verifier
-
+    params = {
+        "client_id": settings.google_client_id,
+        "redirect_uri": LOGIN_REDIRECT_URI,
+        "response_type": "code",
+        "scope": " ".join(settings.oauth_scopes),
+        "access_type": "offline",
+        # select_account: always show Google's account chooser instead of reusing the active account.
+        # consent: always return a refresh token.
+        "prompt": "select_account consent",
+        "include_granted_scopes": "true",
+        "state": state,
+        "code_challenge": challenge,
+        "code_challenge_method": "S256",
+    }
+    if login_hint:
+        params["login_hint"] = login_hint
+    return f"{AUTH_URL}?{urllib.parse.urlencode(params)}", state, verifier
 
 def exchange_code(settings: config_lib.Settings, redirected_url: str, state: str, verifier: str) -> dict[str, Any]:
     """Validates the redirect (state + issuer) and exchanges the code for tokens."""

@@ -57,6 +57,6 @@ async def test_owner_video_performance_joins_titles(settings, monkeypatch):
             res = await client.call_tool("get_my_video_performance", {"content_type": "shorts"})
     sent = analytics.calls[0].request
     assert sent.headers["Authorization"] == "Bearer owner-token"
-    assert "creatorContentType%3D%3DSHORTS" in str(sent.url) and "key=" not in str(sent.url)
+    assert "creatorContentType%3D%3Dshorts" in str(sent.url) and "key=" not in str(sent.url)
     row = res.structured_content["videos"][0]
     assert row["title"] == "My Short" and row["averageViewPercentage"] == 71.5

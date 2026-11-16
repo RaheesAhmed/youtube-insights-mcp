@@ -42,7 +42,7 @@ def _cmd_login(args: argparse.Namespace) -> int:
     if not settings.has_oauth_client:
         print("Set YTMCP_GOOGLE_CLIENT_SECRETS_FILE (or CLIENT_ID/SECRET) first.", file=sys.stderr)
         return 1
-    url, state, verifier = google_oauth.build_login_url(settings)
+    url, state, verifier = google_oauth.build_login_url(settings, login_hint=args.email)
     print(
         "\n1. Make sure this redirect URI is listed on your OAuth client in Google Cloud Console:\n"
         f"   {google_oauth.LOGIN_REDIRECT_URI}\n\n2. Open this link and sign in as the channel owner:\n\n{url}\n"
@@ -106,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("serve", help="Run the MCP server (default)")
     login = sub.add_parser("login", help="Sign in once as the channel owner (token/none modes)")
     login.add_argument("--manual", action="store_true", help="Paste the redirect URL instead of a local listener")
+    login.add_argument("--email", default=None, help="Google account that owns the channel (pre-selected)")
     sub.add_parser("doctor", help="Check configuration and API access")
     sub.add_parser("gen-token", help="Print a new random bearer token")
     args = parser.parse_args(argv)
