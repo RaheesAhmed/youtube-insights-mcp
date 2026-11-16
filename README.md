@@ -2,6 +2,8 @@
 
 A fast, secure **remote MCP server** that lets Claude (or any MCP client) research any YouTube channel and read **your own channel's analytics**.
 
+![YouTube Insights MCP in Claude](banner.png)
+
 - **Any channel:** profile, every upload with tags and stats, comments, a full performance report, channel comparisons, view velocity and niche search.
 - **Your channel:** per-video retention, engaged views and subscribers gained, audience by country, age, gender, traffic source and device, retention curves, and raw Analytics queries.
 - **Built for speed:** HTTP/2 connection pooling, parallel batched requests (50 videos per call), and a local SQLite cache. A repeated question costs 0 quota and comes back in milliseconds.
